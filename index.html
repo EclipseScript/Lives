@@ -35,12 +35,9 @@
             cursor: pointer;
             text-decoration: none;
             border-radius: 5px;
-
         }
         .telegram-btn {
-            background-color: #FF9800; /* Blue */
-
-
+            background-color: #FF9800;
         }
     </style>
 </head>
@@ -49,38 +46,59 @@
     <h1>𝑰𝑷𝑳 𝑳𝑰𝑽𝑬 2025 𝑩𝒚 𝑬𝒄𝒍𝒊𝒑𝒔𝒆 🔴</h1>
 
     <!-- Video Player -->
-    <video id="video" controls poster="https://iframv2.embedxt.site/iframe/frame.php"></video>
+    <video id="video" controls></video>
 
     <!-- Buttons -->
-    
+    <div class="btn-container">
         <a href="https://t.me/Mod_Relax" class="btn telegram-btn" target="_blank">Join Telegram</a>
     </div>
 
     <!-- Message Box -->
     <div class="message-box">
         <input type="text" placeholder="𝗪𝗔𝗧𝗖𝗛 𝗙𝗥𝗘𝗘 𝗜𝗣𝗟 𝟮𝟬𝟮𝟱 🤩🔥">
-       
     </div>
 
     <script>
         var video = document.getElementById('video');
-        var videoSrc = "http://cdn1.bmstudiopk.com:1935/totalsports/live/chunklist_w987479680.m3u8"; // Yahan apna .m3u8 URL dalen
-        
-        if (Hls.isSupported()) {
-            var hls = new Hls();
-            hls.loadSource(videoSrc);
-            hls.attachMedia(video);
-            hls.on(Hls.Events.MANIFEST_PARSED, function () {
-                video.play();
-            });
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = videoSrc;
-            video.addEventListener('loadedmetadata', function () {
-                video.play();
-            });
-        }
-    </script>
+        var videoSrc = "https://iframv2.embedxt.site/iframe/frame.php"; // Your iframe link
 
+        function playStream() {
+            // Check if the browser supports HLS.js
+            if (Hls.isSupported()) {
+                var hls = new Hls();
+                hls.loadSource(videoSrc);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                    video.play().catch(error => {
+                        console.error("Playback error:", error);
+                        alert("Playback failed! Try another browser or check the stream URL.");
+                    });
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = videoSrc;
+                video.play().catch(error => {
+                    console.error("Playback error:", error);
+                    alert("Video can't be played. Try a different browser.");
+                });
+            } else {
+                alert("Your browser does not support HLS streaming.");
+            }
+        }
+
+        // Test if the link is working
+        fetch(videoSrc)
+            .then(response => {
+                if (!response.ok) {
+                    console.warn("Stream URL might be broken or blocked:", response.status);
+                    alert("Warning: This stream URL may not be working.");
+                }
+            })
+            .catch(error => {
+                console.error("Fetch error:", error);
+                alert("Error fetching the stream! Check network or CORS policy.");
+            });
+
+    </script>
 
 </body>
 </html>
